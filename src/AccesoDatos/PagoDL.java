@@ -120,18 +120,34 @@ public class PagoDL {
 		     return 0;
 	}
 	
-	public int sp_Registrar_Pago(int idReserva, String numerocorrelativo, double pagototal,
-								String serie, boolean esFactura) throws Exception {
+	public int sp_Registrar_Pago(String nombre,String dni,String idApellidoPaterno,String idApellidoMaterno,
+			String idCelular,String idTelefono,String idRUC, String idDireccion,String idRazonSocial,
+			String idSerie,String idNumero,String pagoVerifica,int idfactura,String idReservaT,String idPersona) throws Exception {
+		
 		Connection cn = null;
-		int resultado=0;
+		int resultado=0;boolean isfactura=false;
+		if(idfactura==1)isfactura=true;
+		
 		try {
 			cn = Conexion.instancia().Conectar();
-			CallableStatement cst = cn.prepareCall("{call sp_Registrar_Pago(?,?,?,?,?)}");
-			cst.setString(1, numerocorrelativo);
-			cst.setDouble(2, pagototal);
-			cst.setString(3, serie);
-			cst.setBoolean(4, esFactura);
-			cst.setInt(5, idReserva);
+			CallableStatement cst = cn.prepareCall("{call sp_Registrar_Pago(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+			
+			cst.setString(1, nombre);
+			cst.setString(2, dni);
+			cst.setString(3, idApellidoPaterno);
+			cst.setString(4, idApellidoMaterno);
+			cst.setString(5, idCelular);
+			cst.setString(6, idTelefono);
+			cst.setString(7, idRUC);
+			cst.setString(8, idDireccion);
+			cst.setString(9, idRazonSocial);
+			cst.setString(10, idSerie);
+			cst.setInt(11, Integer.parseInt(idNumero));
+			cst.setDouble(12, Double.parseDouble(pagoVerifica));
+			cst.setBoolean(13,isfactura);
+			cst.setInt(14, Integer.parseInt(idReservaT));
+			cst.setInt(15, Integer.parseInt(idPersona));
+			
 			ResultSet rs=cst.executeQuery();
 			  if (rs.next())
 	           {
