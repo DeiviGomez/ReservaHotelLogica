@@ -77,4 +77,32 @@ public class UsuarioDL {
 		}
 		return validacion;
 	}
+	
+	
+	public UsuarioEL VerificarAcceso_Rest(String _usuario, String _password)throws Exception{	
+		Connection cn=null;
+		UsuarioEL u=null;			
+		try {
+			cn=Conexion.instancia().Conectar();
+			CallableStatement cst= cn.prepareCall("{call sp_VerificarUsuario(?,?)}");
+			cst.setString(1, _usuario);
+			cst.setString(2, _password);
+			ResultSet rs=cst.executeQuery();
+			if(rs.next()){
+				u=new UsuarioEL();
+				u.setTipoUsuario(rs.getString("tipoUsuario"));
+								
+			}			
+			return u;
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}finally {
+			cn.close();
+		}
+		
+	}
+	
+	
 }

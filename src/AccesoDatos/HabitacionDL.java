@@ -1,11 +1,18 @@
 package AccesoDatos;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
+import Entidades.DetalleReservaEL;
 import Entidades.HabitacionEL;
-import Entidades.TipoHabitacionEL;;
+import Entidades.PersonaEL;
+import Entidades.ReservaEL;
+import Entidades.TipoHabitacionEL;
+
+
 public class HabitacionDL {
 	//Singleton
 	public static HabitacionDL _instancia;
@@ -105,4 +112,82 @@ public class HabitacionDL {
 		}
 		return validacion;
 	}
+	
+	
+	public List<HabitacionEL> sp_Buscar_Habitaciones_disponibles(String diaEntrada, String diaSalida) throws Exception {
+		Connection cn = null;
+		
+		List<HabitacionEL> lista = new ArrayList<HabitacionEL>();
+		try {
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_Buscar_Habitaciones_disponibles(?,?)}");
+			cst.setString(1, diaEntrada);
+			cst.setString(2, diaSalida);
+			
+			ResultSet rs = cst.executeQuery();
+			while(rs.next()) {
+			  HabitacionEL h = new HabitacionEL();
+			  	h.setId(rs.getInt("idhabitacion"));
+			  	h.setCodigo(rs.getString("codigo"));
+			  		TipoHabitacionEL th=new TipoHabitacionEL();
+			  			th.setId(rs.getInt("id"));
+			  			th.setNombre(rs.getString("nombre"));
+			  			th.setCostoxdia(rs.getDouble("costoxdia"));
+				    h.setTipoHabitacion(th);
+				lista.add(h);
+			}
+			return lista;
+		} catch (Exception ex) {
+			throw ex;
+		}finally{cn.close();}
+	}
+	
+	public List<DetalleReservaEL> sp_Buscar_Habitaciones_Ocupadas(String diaEntrada, String diaSalida) throws Exception {
+		Connection cn = null;
+		
+		List<DetalleReservaEL> lista = new ArrayList<DetalleReservaEL>();
+		try {
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_Buscar_Habitaciones_Ocupadas(?,?)}");
+			cst.setString(1, diaEntrada);
+			cst.setString(2, diaSalida);
+			
+			ResultSet rs = cst.executeQuery();
+			while(rs.next()) {
+				
+				TipoHabitacionEL th=new TipoHabitacionEL();
+					th.setId(rs.getInt("id"));
+					th.setNombre(rs.getString("nombre"));
+					th.setCostoxdia(rs.getDouble("costoxdia"));
+						ReservaEL r=new ReservaEL();
+							r.setFechaInicio(rs.getDate("fechainicio"));
+							r.setFechafinal(rs.getDate("fechafinal"));
+								
+								PersonaEL p=new PersonaEL();
+									p.setNombre(rs.getString("nomcliente"));
+									p.setApellidomaterno(rs.getString("apellidomaterno"));
+									p.setApellidopaterno(rs.getString("apellidopaterno"));
+							    r.setPersona(p);	
+							    
+							  HabitacionEL h = new HabitacionEL();
+							  	h.setId(rs.getInt("idhabitacion"));
+							  	h.setCodigo(rs.getString("codigo"));
+							  	h.setTipoHabitacion(th);
+				DetalleReservaEL d=new DetalleReservaEL();
+					d.setHabitacion(h);
+					d.setReserva(r);
+							  	
+				lista.add(d);
+			}
+			return lista;
+		} catch (Exception ex) {
+			throw ex;
+		}finally{cn.close();}
+	}
+
+	
+	
+	
+	
+	
 }
