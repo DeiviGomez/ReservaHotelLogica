@@ -1,11 +1,42 @@
 package Entidades;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 public class ReservaEL {
+	
+	public ReservaEL(){
+		setListaHabitaciones(new ArrayList<HabitacionEL>());
+	}
+	
 	private int id;
 	private Date fechafinal;
 	private Date fechaInicio;
+	private String inicio;
+	private String fin;
+	
+	public String getInicio() {
+		return inicio;
+	}
+	public void setInicio(String inicio) {
+		this.inicio = inicio;
+	}
+	public String getFin() {
+		return fin;
+	}
+	public void setFin(String fin) {
+		this.fin = fin;
+	}
+
 	private Date fechareserva;
 	private PersonaEL persona;	// idPersona
+	private List<HabitacionEL> listaHabitaciones;
+	
+	public List<HabitacionEL> getListaHabitaciones() {
+		return listaHabitaciones;
+	}
+	public void setListaHabitaciones(List<HabitacionEL> listaHabitaciones) {
+		this.listaHabitaciones = listaHabitaciones;
+	}
 	public int getId() {
 		return id;
 	}

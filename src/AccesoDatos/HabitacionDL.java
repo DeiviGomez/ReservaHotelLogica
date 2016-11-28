@@ -24,6 +24,34 @@ public class HabitacionDL {
 		return _instancia;
 	}
 	//endSingleton
+	
+	public HabitacionEL sp_ObtenerDatosHabitacionParaReserva (int id) throws Exception {
+		Connection cn = null;
+		TipoHabitacionEL tipo = null;
+		HabitacionEL habitacion = null;
+		
+		try{
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_ObtenerDatosHabitacionParaReserva(?)}");
+			cst.setInt(1, id);
+			ResultSet rs = cst.executeQuery();
+			if(rs.next()) {
+				habitacion = new HabitacionEL();
+				habitacion.setId(rs.getInt("id"));
+				habitacion.setCodigo(rs.getString("codigo"));
+				tipo = new TipoHabitacionEL();
+				tipo.setNombre(rs.getString("nombre"));
+				tipo.setCostoxdia(rs.getDouble("costoxdia"));
+				habitacion.setTipoHabitacion(tipo);
+			}
+			return habitacion;
+		} catch (Exception ex) {
+			throw ex;
+		}finally{
+			cn.close();
+		}
+	}
+	
 	public HabitacionEL GEN_buscarHabitacion(int id) throws Exception {
 		Connection cn = null;
 		TipoHabitacionEL th = null;
@@ -123,7 +151,6 @@ public class HabitacionDL {
 			CallableStatement cst = cn.prepareCall("{call sp_Buscar_Habitaciones_disponibles(?,?)}");
 			cst.setString(1, diaEntrada);
 			cst.setString(2, diaSalida);
-			
 			ResultSet rs = cst.executeQuery();
 			while(rs.next()) {
 			  HabitacionEL h = new HabitacionEL();

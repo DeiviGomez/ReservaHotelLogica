@@ -2,6 +2,7 @@ package AccesoDatos;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,6 +107,33 @@ public class ReservaDL {
 			cn.close();
 		}
 		return validacion;
+	}
+	
+	public boolean sp_RegistrarReservaXML(ReservaEL reserva) throws Exception{
+		Connection cn = null;
+		boolean x = false;
+		String xml = 
+			"<root> " + 
+			"  <Reserva FECHAFINAL = \"" + reserva.getFin() + "\" FECHAINICIO = \"" + reserva.getInicio() + "\" IDPERSONA = \"" + reserva.getPersona().getId() + "\"> ";
+		for(HabitacionEL habitacion : reserva.getListaHabitaciones()) {
+			xml += 
+				"    <DetalleReserva IDHABITACION = \"" + habitacion.getId() + "\"/> ";
+		}
+		xml += 
+			"  </Reserva> " + 
+			"</root> ";
+		try{
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_registrarReserva(?)}");
+			cst.setString(1, xml);
+			int i = cst.executeUpdate();
+			if (i>0) x = true;
+		} catch (Exception ex) {
+			throw ex;
+		} finally {
+			cn.close();
+		}
+		return x;
 	}
 	
 	public List<DetalleReservaEL> sp_Buscar_Reserva(int idReserva, int idPersona) throws Exception {

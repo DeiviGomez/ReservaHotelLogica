@@ -78,6 +78,38 @@ public class UsuarioDL {
 		return validacion;
 	}
 	
+	public PersonaEL VerificarAcessoPorPlataforma(String nickname, String contrasena, String tipoUsuario) throws Exception{
+		Connection cn = null;
+		PersonaEL persona = null;
+		try{
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_VerificarUsuario(?,?)}");
+			cst.setString(1, nickname);
+			cst.setString(2, contrasena);
+			ResultSet rs = cst.executeQuery();
+			if(rs.next()){
+			
+				String tipo = rs.getString("tipoUsuario");
+				if(!tipo.equals(tipoUsuario))
+					throw new Exception("No tiene los permisos para acceder por aquí");
+				
+				persona = new PersonaEL();
+				persona.setId(rs.getInt("idPersona"));
+				persona.setApellidopaterno(rs.getString("apellidoPaterno"));
+				persona.setApellidomaterno(rs.getString("apellidoMaterno"));
+				persona.setNombre(rs.getString("nombre"));
+			}
+			
+			if (persona == null)
+				throw new Exception("Usuario y/o Password Incorrectos");
+			
+			return persona;
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			cn.close();
+		}
+	}	
 	
 	public UsuarioEL VerificarAcceso_Rest(String _usuario, String _password)throws Exception{	
 		Connection cn=null;

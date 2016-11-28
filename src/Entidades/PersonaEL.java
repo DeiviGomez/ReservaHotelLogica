@@ -12,6 +12,14 @@ public class PersonaEL {
 	private String ruc;
 	private String telefono;
 	private String razonSocial;
+	private UsuarioEL usuario;
+	
+	public UsuarioEL getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(UsuarioEL usuario) {
+		this.usuario = usuario;
+	}
 	public String getRazonSocial() {
 		return razonSocial;
 	}
