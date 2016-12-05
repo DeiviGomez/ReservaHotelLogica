@@ -14,9 +14,15 @@ public class Conexion {
 	public Connection Conectar() throws Exception{
 		Connection cn = null;
 		try {
+			/*
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			cn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;"+
 						"databaseName=BDReservaHotelSOWAD", "sa", "123456");
+			*/
+			
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			cn = DriverManager.getConnection("jdbc:sqlserver://13.68.210.51:1433;"+
+						"databaseName=BDReservaHotelSOWAD", "sa", "123456T2sowad");
 		} catch (Exception e) {
 			throw e;
 		}

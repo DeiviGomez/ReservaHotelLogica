@@ -10,6 +10,7 @@ import Entidades.ReservaEL;
 import Entidades.TipoHabitacionEL;
 import Entidades.DetalleReservaEL;
 import Entidades.HabitacionEL;
+import Entidades.PagoEL;
 import Entidades.PersonaEL;
 public class ReservaDL {
 	//Singleton
@@ -75,9 +76,9 @@ public class ReservaDL {
 		try {
 			cn = Conexion.instancia().Conectar();
 			CallableStatement cst = cn.prepareCall("{call GEN_registrarReserva(?,?,?,?)}");
-			cst.setDate(1, r.getFechafinal());
-			cst.setDate(2, r.getFechaInicio());
-			cst.setDate(3, r.getFechareserva());
+			//cst.setDate(1, r.getFechafinal());
+			//cst.setDate(2, r.getFechaInicio());
+			//cst.setDate(3, r.getFechareserva());
 			cst.setInt(4, r.getPersona().getId());
 			int i = cst.executeUpdate();
 			if(i>0){validacion=true;}		
@@ -95,9 +96,9 @@ public class ReservaDL {
 			cn = Conexion.instancia().Conectar();
 			CallableStatement cst = cn.prepareCall("{call GEN_editarReserva(?,?,?,?,?)}");
 			cst.setInt(1, r.getId());
-			cst.setDate(2, r.getFechafinal());
-			cst.setDate(3, r.getFechaInicio());
-			cst.setDate(4, r.getFechareserva());
+			//cst.setDate(2, r.getFechafinal());
+			//cst.setDate(3, r.getFechaInicio());
+			//cst.setDate(4, r.getFechareserva());
 			cst.setInt(5, r.getPersona().getId());
 			int i = cst.executeUpdate();
 			if(i>0){validacion=true;}		
@@ -109,16 +110,18 @@ public class ReservaDL {
 		return validacion;
 	}
 	
-	public boolean sp_RegistrarReservaXML(ReservaEL reserva) throws Exception{
+	public int sp_RegistrarReservaXML(ReservaEL reserva, PagoEL pago,int isfactura, PersonaEL persona) throws Exception{
 		Connection cn = null;
-		boolean x = false;
+		int resultado=0;
 		String xml = 
 			"<root> " + 
 			"  <Reserva FECHAFINAL = \"" + reserva.getFin() + "\" FECHAINICIO = \"" + reserva.getInicio() + "\" IDPERSONA = \"" + reserva.getPersona().getId() + "\"> ";
-		for(HabitacionEL habitacion : reserva.getListaHabitaciones()) {
-			xml += 
+				for(HabitacionEL habitacion : reserva.getListaHabitaciones()) {
+					xml += 
 				"    <DetalleReserva IDHABITACION = \"" + habitacion.getId() + "\"/> ";
-		}
+				}
+				xml +="<Pago NUMEROCORRELATIVO= \""+ pago.getNumerocorrelativo() + "\" PAGOTOT= \"" +pago.getPagototal()+ "\" SERIE= \""+ pago.getSerie()+ "\" ISFACTURA = \"" + isfactura + "\" />";
+			xml +="<Persona APellidoP= \""+persona.getApellidopaterno()+ "\" ApellidoM= \""+ persona.getApellidomaterno() + "\" CELULAR= \""+persona.getCelular()+"\" DIRECCION = \"" +persona.getDireccion()+ "\" DNI= \"" +persona.getDni()+"\" IDPERSONA=\"" +reserva.getPersona().getId()  + "\" NOMBRE=\""+ persona.getNombre()+"\" RUC=\""+persona.getRuc()+" \" TELEFONO=\""+persona.getTelefono()+" \" RAZONSOCIAL=\""+persona.getRazonSocial()+"\" />";
 		xml += 
 			"  </Reserva> " + 
 			"</root> ";
@@ -126,14 +129,22 @@ public class ReservaDL {
 			cn = Conexion.instancia().Conectar();
 			CallableStatement cst = cn.prepareCall("{call sp_registrarReserva(?)}");
 			cst.setString(1, xml);
-			int i = cst.executeUpdate();
-			if (i>0) x = true;
+			
+			ResultSet rs=cst.executeQuery();
+			 if (rs.next())
+	           {
+				  resultado=rs.getInt("insertado");
+	           }
+			  if(resultado==1){
+				  return 1;
+			  }
+
 		} catch (Exception ex) {
 			throw ex;
 		} finally {
 			cn.close();
 		}
-		return x;
+		return 0;
 	}
 	
 	public List<DetalleReservaEL> sp_Buscar_Reserva(int idReserva, int idPersona) throws Exception {

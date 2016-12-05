@@ -95,5 +95,62 @@ public class PersonaEL {
 	}
 	
 	
+	 public Boolean nombreVacio(String nombre) throws Exception
+     {
+         if (nombre.trim().length() == 0) throw new Exception("errornombre"); else return false;
+     }
+	 public Boolean ApellidoPVacio(String apellidoP) throws Exception
+     {
+         if (apellidoP.trim().length() == 0) throw new Exception("errorapellidoP"); else return false;
+     }
 	
+	 public Boolean ApellidoMVacio(String apellidoM) throws Exception
+     {
+         if (apellidoM.trim().length() == 0) throw new Exception("errorapellidoM"); else return false;
+     }
+	
+	 public Boolean DNIVacio(String dni) throws Exception
+     {
+         if (dni.trim().length() == 0) throw new Exception("erroradni"); else return false;
+     }
+	
+	 public Boolean DNI8digitos(String dni) throws Exception
+     {
+         if (dni.trim().length() == 8)return true; else throw new Exception("erroradni2");
+     }
+	 
+	 public Boolean RUC11digitos(String ruc) throws Exception
+     {
+         if (ruc.trim().length() == 11)return true; else throw new Exception("errorruc");
+     }
+	
+	 public Boolean RUCSOloNumeros(String ruc) throws Exception
+     {
+		 
+		 try {
+			 double rucvalida=Double.parseDouble(ruc.trim());
+			 
+			 if(rucvalida<0)throw new Exception("errorruc2");else return true;
+			 
+		} catch (NumberFormatException e) {			
+			   throw new Exception("errorruc2");
+		}
+	
+     }
+	 
+	 public Boolean DNISOloNumeros(String dni) throws Exception
+     {
+		 
+		 try {
+			 int dnivalida=Integer.parseInt(dni.trim());
+			 
+			 if(dnivalida<0)throw new Exception("erroradni3");else return true;
+			 
+		} catch (NumberFormatException e) {			
+			   throw new Exception("erroradni3");
+		}
+	
+     }
+	 
+	 
 }

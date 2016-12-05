@@ -75,7 +75,7 @@ public class PagoDL {
 			cn = Conexion.instancia().Conectar();
 			CallableStatement cst = cn.prepareCall("{call GEN_registrarPago(?,?,?,?,?,?)}");
 			cst.setBoolean(1, p.getEsFactura());
-			cst.setDate(2, p.getFechapagototal());
+			//cst.setDate(2, p.getFechapagototal());
 			cst.setInt(3, p.getReserva().getId());
 			cst.setInt(4, p.getNumerocorrelativo());
 			cst.setDouble(5, p.getPagototal());
@@ -166,6 +166,23 @@ public class PagoDL {
 		return 0;
 	}
 	
+	
+	public String sp_Numero_Documento() throws Exception {
+		Connection cn = null;
+		String documento = null;
+		try {
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_Numero_Documento}");
+			ResultSet rs = cst.executeQuery();
+			if(rs.next()) {
+				documento=rs.getString("documento");
+
+			}
+			return documento;
+		} catch (Exception ex) {
+			throw ex;
+		}finally{cn.close();}
+	}
 	
 	
 }

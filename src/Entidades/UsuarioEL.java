@@ -41,5 +41,14 @@ public class UsuarioEL {
 				+ ", tipoUsuario=" + tipoUsuario + "]";
 	}
 	
+	 public Boolean usuarioVacio(String usuario) throws Exception
+     {
+         if (usuario.trim().length() == 0) throw new Exception("errorusuario"); else return false;
+     }
+	 public Boolean passwordVacio(String password) throws Exception
+     {
+         if (password.trim().length() == 0) throw new Exception("errorpassword"); else return false;
+     }
+	
 	
 }

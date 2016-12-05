@@ -1,7 +1,10 @@
 package Entidades;
-import java.sql.Date;
+
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import AccesoDatos.PagoDL;
 public class PagoEL {
 	private int id;
 	private Boolean esFactura;
@@ -60,11 +63,11 @@ public class PagoEL {
 	}
 	
 	
-	public double calcularDescuentoPorRecurrenciaMes( List<DetalleReservaEL>listad, int desconcurrencia){
+	public double calcularDescuentoPorRecurrenciaMes( List<HabitacionEL>listad, int desconcurrencia, Date fecha,ReservaEL reserva ){
 		double descuento=0, totalreserva=0;int i=0;
 		 
 	
-		  totalreserva=calcularPagosinDescuentos(listad);
+		  totalreserva=calcularPagosinDescuentos(listad, reserva);
 		  
 		  if(desconcurrencia==1){
 		     descuento=totalreserva*0.05;
@@ -73,14 +76,14 @@ public class PagoEL {
 		return descuento;
 	}
 	
-	  public double calcularDescuentoFestivalMarinera(int anio, int mes, int dia, List<DetalleReservaEL>listad)
+	  public double calcularDescuentoFestivalMarinera(int anio, int mes, int dia, List<HabitacionEL>listad, ReservaEL reserva)
       {		 
 		  double  totalreserva=0;int i=0;		  
           double descuentoFestivalMarinera = 0;
           if (mes== 1 && dia >= 24 && dia<= 31)
           {
         	 
-        	  totalreserva=calcularPagosinDescuentos(listad);
+        	  totalreserva=calcularPagosinDescuentos(listad,reserva);
         	  
         	  if(totalreserva>0)
         	     descuentoFestivalMarinera=totalreserva*0.05;
@@ -91,14 +94,14 @@ public class PagoEL {
               return 0;
       }
 	
-	  public double calcularDescuentoDiaCancionCriolla(int anio, int mes, int dia, List<DetalleReservaEL>listad)
+	  public double calcularDescuentoDiaCancionCriolla(int anio, int mes, int dia, List<HabitacionEL>listad, ReservaEL reserva)
       {		 
 		  double  totalreserva=0;int i=0;		  		  
           double descuentoDiaCancionCriolla = 0;
           if (mes== 10 && dia >= 30 && dia<= 31)
           {
         	 
-        		totalreserva=calcularPagosinDescuentos(listad);
+        		totalreserva=calcularPagosinDescuentos(listad,reserva);
         	  if(totalreserva>0)
         	      descuentoDiaCancionCriolla=totalreserva*0.05;
       		return descuentoDiaCancionCriolla;
@@ -109,14 +112,14 @@ public class PagoEL {
       }
 	  
 	  
-	  public double calcularDescuentoDiaPolloBrasa(int anio, int mes, int dia, List<DetalleReservaEL>listad)
+	  public double calcularDescuentoDiaPolloBrasa(int anio, int mes, int dia, List<HabitacionEL>listad, ReservaEL reserva)
       {		 
 		  double  totalreserva=0;int i=0;		  
           double descuentoDiaPolloBrasa = 0;
           if (mes== 2 && dia ==21 )
           {
         	
-        	totalreserva=calcularPagosinDescuentos(listad);
+        	totalreserva=calcularPagosinDescuentos(listad,reserva);
         	  if(totalreserva>0)
         	    descuentoDiaPolloBrasa=totalreserva*0.05;
       		return descuentoDiaPolloBrasa;
@@ -126,14 +129,14 @@ public class PagoEL {
               return 0;
       }
 	  
-	  public double calcularDescuentoFiestasPatrias(int anio, int mes, int dia, List<DetalleReservaEL>listad)
+	  public double calcularDescuentoFiestasPatrias(int anio, int mes, int dia, List<HabitacionEL>listad, ReservaEL reserva)
       {		 
 		  double  totalreserva=0;int i=0;		  
           double descuentoFiestasPatrias = 0;
           if (mes== 7 && dia >= 28 && dia<= 29)
           {
         	 
-        	totalreserva=calcularPagosinDescuentos(listad);
+        	totalreserva=calcularPagosinDescuentos(listad,reserva);
         	  if(totalreserva>0)
         	      descuentoFiestasPatrias=totalreserva*0.05;
       		return descuentoFiestasPatrias;
@@ -144,14 +147,14 @@ public class PagoEL {
       }
 	  
 	  
-	  public double calcularDescuentoFundacionTrujillo(int anio, int mes, int dia, List<DetalleReservaEL>listad)
+	  public double calcularDescuentoFundacionTrujillo(int anio, int mes, int dia, List<HabitacionEL>listad, ReservaEL reserva)
       {		 
 		  double  totalreserva=0;int i=0;		  
           double descuentoFundacionTrujillo = 0;
           if (mes== 11 && dia >= 30 && dia<= 31)
           {
         	
-        	totalreserva=calcularPagosinDescuentos(listad);
+        	totalreserva=calcularPagosinDescuentos(listad,reserva);
         	  if(totalreserva>0)
         	    descuentoFundacionTrujillo=totalreserva*0.05;
       		return descuentoFundacionTrujillo;
@@ -162,7 +165,7 @@ public class PagoEL {
       }
 	  
 	  
-	  public double calcularDescuentoSanValentin(int anio, int mes, int dia, List<DetalleReservaEL>listad)
+	  public double calcularDescuentoSanValentin(int anio, int mes, int dia, List<HabitacionEL>listad, ReservaEL reserva)
       {		 
 		  double  totalreserva=0;int i=0;		  
 		  
@@ -170,7 +173,7 @@ public class PagoEL {
           if (mes== 2 && dia ==14)
           {
         	 
-        	totalreserva=calcularPagosinDescuentos(listad);
+        	totalreserva=calcularPagosinDescuentos(listad,reserva);
         	  if(totalreserva>0)
         	     descuentoSanValentin=totalreserva*0.05;
       		return descuentoSanValentin;
@@ -180,14 +183,14 @@ public class PagoEL {
               return 0;
       }
 	  
-	  public double calcularDescuentoSemanaSanta(int anio, int mes, int dia, List<DetalleReservaEL>listad)
+	  public double calcularDescuentoSemanaSanta(int anio, int mes, int dia, List<HabitacionEL>listad, ReservaEL reserva)
       {		 
 		  double  totalreserva=0;int i=0;		  
           double descuentoSemanaSanta = 0;
           if (mes== 3 && dia >= 20 && dia<= 28)
           {
         	
-        	totalreserva=calcularPagosinDescuentos(listad);
+        	totalreserva=calcularPagosinDescuentos(listad,reserva);
         	  if(totalreserva>0)
         	    descuentoSemanaSanta=totalreserva*0.05;
       		return descuentoSemanaSanta;
@@ -198,14 +201,14 @@ public class PagoEL {
       }
 	  
 	  
-	  public double calcularDescuentoNavidad(int anio, int mes, int dia, List<DetalleReservaEL>listad)
+	  public double calcularDescuentoNavidad(int anio, int mes, int dia, List<HabitacionEL>listad, ReservaEL reserva)
       {		 
 		  double  totalreserva=0;int i=0;		  		  
           double descuentoNavidad = 0;
           if (mes== 12 && dia ==24)
           {
         	
-        		totalreserva=calcularPagosinDescuentos(listad);
+        		totalreserva=calcularPagosinDescuentos(listad,reserva);
         	    if(totalreserva>0)
         		     descuentoNavidad=totalreserva*0.05;
       		return descuentoNavidad;
@@ -218,7 +221,7 @@ public class PagoEL {
 	  
 	  
 	  
-	  public double calcularImpuestoIGV(int tipocomprobante, List<DetalleReservaEL>listad,Date fecha, int desconcurrencia )
+	  public double calcularImpuestoIGV(int tipocomprobante, List<HabitacionEL>listad,Date fecha, int desconcurrencia, ReservaEL reserva )
       {		 
 		  double  totalreserva=0, redondeoIGV=0;		  
 		  
@@ -228,8 +231,8 @@ public class PagoEL {
           if (tipocomprobante==2)
           {
         	 
-        	  totalreserva=calcularPagosinDescuentos(listad)-calculoDescuentoGeneralFiestas(fecha,listad)-
-        			  		calcularDescuentoPorRecurrenciaMes(listad, desconcurrencia);
+        	  totalreserva=calcularPagosinDescuentos(listad,reserva)-calculoDescuentoGeneralFiestas(fecha,listad, reserva)-
+        			  		calcularDescuentoPorRecurrenciaMes(listad, desconcurrencia,fecha, reserva );
         	 
         	  if(totalreserva>0){
         		 // descuentoIGV=(totalreserva/1.18)*0.18;
@@ -244,18 +247,18 @@ public class PagoEL {
               return totalreserva;
       }
 	
-    public double calcularPagosinDescuentos(List<DetalleReservaEL>listad)
+    public double calcularPagosinDescuentos(List<HabitacionEL>listad, ReservaEL reserva)
       {		 
 		  double  totalreserva=0;int i=0;
 	
-		  long diferenciaEn_ms = listad.get(i).getReserva().getFechafinal().getTime()-
-				  				listad.get(i).getReserva().getFechaInicio().getTime();
+		  long diferenciaEn_ms = reserva.getFechafinal().getTime()-
+				  				reserva.getFechaInicio().getTime();
 		  long dias = diferenciaEn_ms / (1000 * 60 * 60 * 24);
 		  if(dias==0)dias=1;
 		  
 		
-        	  for (DetalleReservaEL detalleReservaEL : listad) {
-      			 totalreserva=totalreserva+listad.get(i++).getHabitacion().getTipoHabitacion().getCostoxdia();
+        	  for (HabitacionEL detalleReservaEL : listad) {
+      			 totalreserva=totalreserva+listad.get(i++).getTipoHabitacion().getCostoxdia();
       			
         	  }
         	   if(totalreserva>0)
@@ -266,7 +269,7 @@ public class PagoEL {
 
       }
 	  
-	public double calculoDescuentoGeneralFiestas(Date fecha, List<DetalleReservaEL>listad){
+	public double calculoDescuentoGeneralFiestas(Date fecha, List<HabitacionEL>listad, ReservaEL reserva){
 		double redondeoDescuentoTotalFiestas=0;
 		  Calendar calendario = Calendar.getInstance();
 		  calendario.setTime(fecha);
@@ -275,14 +278,14 @@ public class PagoEL {
 		  int dia=calendario.get(Calendar.DAY_OF_MONTH);
 		  
 		double descuentoTotalFiestas=
-			calcularDescuentoFestivalMarinera(anio,mes,dia,listad)+
-			calcularDescuentoDiaCancionCriolla(anio,mes,dia, listad)
-			+ calcularDescuentoDiaPolloBrasa(anio,mes,dia, listad)+
-			calcularDescuentoFiestasPatrias(anio,mes,dia, listad)+
-			calcularDescuentoFundacionTrujillo(anio,mes,dia, listad)+
-			calcularDescuentoSanValentin(anio,mes,dia, listad)+
-			calcularDescuentoSemanaSanta(anio,mes,dia, listad)+
-			calcularDescuentoNavidad(anio,mes,dia, listad);
+			calcularDescuentoFestivalMarinera(anio,mes,dia,listad,reserva)+
+			calcularDescuentoDiaCancionCriolla(anio,mes,dia, listad, reserva)
+			+ calcularDescuentoDiaPolloBrasa(anio,mes,dia, listad,reserva)+
+			calcularDescuentoFiestasPatrias(anio,mes,dia, listad,reserva)+
+			calcularDescuentoFundacionTrujillo(anio,mes,dia, listad, reserva)+
+			calcularDescuentoSanValentin(anio,mes,dia, listad,reserva)+
+			calcularDescuentoSemanaSanta(anio,mes,dia, listad,reserva)+
+			calcularDescuentoNavidad(anio,mes,dia, listad,reserva);
 			
 		
 		return descuentoTotalFiestas;
@@ -290,16 +293,16 @@ public class PagoEL {
 	
 	
 	
-	public double pagoTotal(Date fecha,List<DetalleReservaEL>listad,int tipocomprobante, int desconcurrencia){
+	public double pagoTotal(Date fecha,List<HabitacionEL>listad,int tipocomprobante, int desconcurrencia, ReservaEL reserva){
 	double totalPago=0,redondeopagoTotal=0;
 	if(tipocomprobante==2){
 		
-		totalPago=(calcularPagosinDescuentos(listad)-calculoDescuentoGeneralFiestas(fecha, listad)-
-				  calcularDescuentoPorRecurrenciaMes(listad,desconcurrencia))+calcularImpuestoIGV(tipocomprobante, listad,fecha, desconcurrencia);
+		totalPago=(calcularPagosinDescuentos(listad,reserva)-calculoDescuentoGeneralFiestas(fecha, listad,reserva)-
+				  calcularDescuentoPorRecurrenciaMes(listad,desconcurrencia,fecha,reserva))+calcularImpuestoIGV(tipocomprobante, listad,fecha, desconcurrencia,reserva);
 	}else{
 		
-		totalPago=(calcularPagosinDescuentos(listad)-calculoDescuentoGeneralFiestas(fecha, listad))
-				-calcularDescuentoPorRecurrenciaMes(listad, desconcurrencia);
+		totalPago=(calcularPagosinDescuentos(listad,reserva)-calculoDescuentoGeneralFiestas(fecha, listad,reserva))
+				-calcularDescuentoPorRecurrenciaMes(listad, desconcurrencia,fecha,reserva);
 	}
 
 	
@@ -307,17 +310,21 @@ public class PagoEL {
 	}
 	
 	  
-	public String numerocomprobante(int tipocomprobante,String idReserva){
+	public String numerocomprobante(int tipocomprobante){
+		try{
 		String numero="";
 		if(tipocomprobante==2){
-			numero="1000"+String.valueOf(idReserva);
+			numero="1000"+PagoDL.instancia().sp_Numero_Documento();
 		}else{
-			numero="500"+String.valueOf(idReserva);
+			numero="500"+PagoDL.instancia().sp_Numero_Documento();
 		}
 		return numero;
+		}catch(Exception e){
+			return null;
+		}
 	}
 	
-    public String seriecomprobante(int tipocomprobante,String idReserva){
+    public String seriecomprobante(int tipocomprobante){
     	String serie="";
     	
     	if(tipocomprobante==2){

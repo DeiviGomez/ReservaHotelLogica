@@ -3,7 +3,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import Entidades.PersonaEL;;
+import Entidades.PersonaEL;
+import Entidades.UsuarioEL;;
 public class PersonaDL {
 	//Singleton
 	public static PersonaDL _instancia;
@@ -222,7 +223,81 @@ public class PersonaDL {
 	}
 	
 	
+	public int sp_Registrar_Usuario(PersonaEL p, UsuarioEL usuario) throws Exception {
+		Connection cn = null;
+		int resultado=0;
+		try {
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_Registrar_Usuario(?,?,?,?,?,?)}");
+			cst.setString(1, p.getApellidomaterno());
+			cst.setString(2, p.getApellidopaterno());
+			cst.setString(3, p.getDni());
+			cst.setString(4, p.getNombre());			
+			cst.setString(5, usuario.getNickname());
+			cst.setString(6, usuario.getContrasena());
+		
+			boolean i = cst.execute();
+			
+			if(!i){
+				return 1;
+			}
+			else if(i){
+				
+	    		ResultSet rs=cst.executeQuery();
+	    		while (rs.next())
+	    			{
+					resultado=rs.getInt("resultado");
+		           }
+				  if(resultado==1){
+				      return 1;
+				  }
+				  else if(resultado==2){
+					  throw new Exception("errorusuarioexistente");
+				  }
+				  else if(resultado==3){
+					  throw new Exception("errorDNIexistente");
+				  }
+				  
+				return 1;
+			}
+			
+		} catch (Exception ex) {
+			throw ex;
+		} finally {
+			cn.close();
+		}
+		return resultado;
+	}
 	
+	public int sp_Actualizar_Usuario(PersonaEL p) throws Exception {
+		Connection cn = null;
+		try {
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_Actualizar_Usuario(?,?,?,?,?,?,?,?,?,?)}");
+			cst.setString(1, p.getApellidomaterno());
+			cst.setString(2, p.getApellidopaterno());
+			cst.setString(3, p.getCelular());
+			cst.setString(4, p.getDireccion());			
+			cst.setString(5, p.getDni());
+			cst.setInt(6, p.getId());
+			cst.setString(7, p.getNombre());
+			cst.setString(8, p.getRuc());
+			cst.setString(9, p.getTelefono());	
+			cst.setString(10, p.getRazonSocial());
+					
+			boolean i = cst.execute();
+			
+			if(!i){
+				return 1;
+			}	    	
+				 			
+		} catch (Exception ex) {
+			throw new Exception("erroractualiza");
+		} finally {
+			cn.close();
+		}
+		return 0;
+	}
 	
 	
 }
