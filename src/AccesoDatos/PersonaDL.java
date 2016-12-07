@@ -3,7 +3,10 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
+import Entidades.HabitacionEL;
 import Entidades.PersonaEL;
+import Entidades.TipoHabitacionEL;
 import Entidades.UsuarioEL;;
 public class PersonaDL {
 	//Singleton
@@ -299,5 +302,135 @@ public class PersonaDL {
 		return 0;
 	}
 	
+	public boolean sp_DesactivarEmpleado (int id) throws Exception {
+		Connection cn = null;
+		boolean validacion = false;
+		try{
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_DesactivarEmpleado(?)}");
+			cst.setInt(1, id);
+			int i = cst.executeUpdate();
+			if (i>0) validacion = true;
+		} catch (Exception ex) {
+			throw ex;
+		} finally {
+			cn.close();
+		}
+		return validacion;
+	}
+	
+	public boolean sp_EditarEmpleados(PersonaEL p) throws Exception {
+		Connection cn = null;
+		boolean validacion = false;
+		try {
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_EditarEmpleados(?,?,?,?,?,?,?,?,?,?,?)}");
+			cst.setInt(1, p.getId());
+			cst.setString(2, p.getApellidomaterno());
+			cst.setString(3, p.getApellidopaterno());
+			cst.setString(4, p.getCelular());
+			cst.setString(5, p.getDireccion());			
+			cst.setString(6, p.getDni());
+			cst.setString(7, p.getNombre());
+			cst.setString(8, p.getTelefono());	
+			cst.setString(9, p.getUsuario().getNickname());
+			cst.setString(10, p.getUsuario().getContrasena());
+			cst.setString(11, p.getUsuario().getTipoUsuario());
+			
+			int i = cst.executeUpdate();
+			if(i>0){validacion=true;}		
+		} catch (Exception ex) {
+			throw ex;
+		} finally {
+			cn.close();
+		}
+		return validacion;
+	}
+	
+	public boolean sp_RegistrarEmpleado(PersonaEL p) throws Exception {
+		Connection cn = null;
+		boolean validacion = false;
+		try {
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_RegistrarEmpleado(?,?,?,?,?,?,?,?,?,?)}");
+			cst.setString(1, p.getApellidomaterno());
+			cst.setString(2, p.getApellidopaterno());
+			cst.setString(3, p.getCelular());
+			cst.setString(4, p.getDireccion());
+			cst.setString(5, p.getDni());
+			cst.setString(6, p.getNombre());
+			cst.setString(7, p.getTelefono());	
+			cst.setString(8, p.getUsuario().getNickname());
+			cst.setString(9, p.getUsuario().getContrasena());
+			cst.setString(10, p.getUsuario().getTipoUsuario());
+			
+			int i = cst.executeUpdate();
+			if(i>0){validacion=true;}		
+		} catch (Exception ex) {
+			throw ex;
+		} finally {
+			cn.close();
+		}
+		return validacion;
+	}
+	
+	public ArrayList<PersonaEL> sp_ListarEmpleados() throws Exception {
+		Connection cn = null;
+		PersonaEL p = null;
+		UsuarioEL u = null;
+		ArrayList<PersonaEL> lista = new ArrayList<PersonaEL>();
+		try {
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_ListarEmpleados()}");
+			ResultSet rs = cst.executeQuery();
+			while(rs.next()) {
+				p = new PersonaEL();
+				//p.setId(rs.getInt("id"));
+				p.setNombre(rs.getString("nombre"));
+				p.setApellidopaterno(rs.getString("apellidopaterno"));
+				p.setApellidomaterno(rs.getString("apellidomaterno"));
+				p.setDni(rs.getString("dni"));
+					u = new UsuarioEL();
+					u.setNickname(rs.getString("nickname"));
+					u.setTipoUsuario(rs.getString("tipoUsuario"));
+					p.setUsuario(u);
+				lista.add(p);
+			}
+			return lista;
+		} catch (Exception ex) {
+			throw ex;
+		}finally{cn.close();}
+	}
+	
+	public PersonaEL sp_SeleccionarEmpleado (int id) throws Exception {
+		Connection cn = null;
+		PersonaEL p = null;
+		UsuarioEL u = null;
+		try {
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_SeleccionarEmpleado(?)}");
+			cst.setInt(1, id);
+			ResultSet rs = cst.executeQuery();
+			if(rs.next()) {
+				p = new PersonaEL();
+				p.setId(id);
+				p.setApellidomaterno(rs.getString("apellidomaterno"));
+				p.setApellidopaterno(rs.getString("apellidopaterno"));
+				p.setCelular(rs.getString("celular"));
+				p.setDireccion(rs.getString("direccion"));
+				p.setDni(rs.getString("dni"));
+				p.setNombre(rs.getString("nombre"));
+				p.setTelefono(rs.getString("telefono"));
+				u = new UsuarioEL();
+				u.setContrasena(rs.getString("contrasena"));
+				u.setNickname(rs.getString("nickname"));
+				u.setTipoUsuario(rs.getString("tipoUsuario"));
+				p.setUsuario(u);
+			}
+			return p;
+		} catch (Exception ex) {
+			throw ex;
+		}finally{cn.close();}
+	}
 	
 }

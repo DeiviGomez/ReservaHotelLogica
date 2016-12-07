@@ -89,10 +89,11 @@ public class HabitacionDL {
 				h = new HabitacionEL();
 				h.setId(rs.getInt("id"));
 				h.setCodigo(rs.getString("codigo"));
-				h.setHabilitado(rs.getBoolean("habilitado"));
-				h.setOcupado(rs.getBoolean("ocupado"));
+				//h.setHabilitado(rs.getBoolean("habilitado"));
+				//h.setOcupado(rs.getBoolean("ocupado"));
 					th = new TipoHabitacionEL();
 					th.setId(rs.getInt("idTipoHabitacion"));
+					th.setNombre(rs.getString("nombre"));
 					h.setTipoHabitacion(th);
 				lista.add(h);
 			}
@@ -108,9 +109,9 @@ public class HabitacionDL {
 			cn = Conexion.instancia().Conectar();
 			CallableStatement cst = cn.prepareCall("{call GEN_registrarHabitacion(?,?,?,?)}");
 			cst.setString(1, h.getCodigo());
-			cst.setBoolean(2, h.getHabilitado());
-			cst.setBoolean(3, h.getOcupado());
-			cst.setInt(4, h.getTipoHabitacion().getId());
+			//cst.setBoolean(2, h.getHabilitado());
+			//cst.setBoolean(3, h.getOcupado());
+			cst.setInt(2, h.getTipoHabitacion().getId());
 			int i = cst.executeUpdate();
 			if(i>0){validacion=true;}		
 		} catch (Exception ex) {
@@ -120,17 +121,35 @@ public class HabitacionDL {
 		}
 		return validacion;
 	}
+	
+	public boolean sp_DesactivarHabitacion (int id) throws Exception {
+		Connection cn = null;
+		boolean validacion = false;
+		try{
+			cn = Conexion.instancia().Conectar();
+			CallableStatement cst = cn.prepareCall("{call sp_DesactivarHabitacion(?)}");
+			cst.setInt(1, id);
+			int i = cst.executeUpdate();
+			if (i>0) validacion = true;
+		} catch (Exception ex) {
+			throw ex;
+		} finally {
+			cn.close();
+		}
+		return validacion;
+	}
+	
 	public boolean GEN_editarHabitacion(HabitacionEL h) throws Exception {
 		Connection cn = null;
 		boolean validacion = false;
 		try {
 			cn = Conexion.instancia().Conectar();
-			CallableStatement cst = cn.prepareCall("{call GEN_editarHabitacion(?,?,?,?,?)}");
+			CallableStatement cst = cn.prepareCall("{call GEN_editarHabitacion(?,?,?}");
 			cst.setInt(1, h.getId());
 			cst.setString(2, h.getCodigo());
-			cst.setBoolean(3, h.getHabilitado());
-			cst.setBoolean(4, h.getOcupado());
-			cst.setInt(5, h.getTipoHabitacion().getId());
+			//cst.setBoolean(3, h.getHabilitado());
+			//cst.setBoolean(4, h.getOcupado());
+			cst.setInt(3, h.getTipoHabitacion().getId());
 			int i = cst.executeUpdate();
 			if(i>0){validacion=true;}		
 		} catch (Exception ex) {

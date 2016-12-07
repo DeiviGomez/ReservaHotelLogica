@@ -81,6 +81,7 @@ public class UsuarioDL {
 	public PersonaEL VerificarAcessoPorPlataforma(String nickname, String contrasena, String tipoUsuario) throws Exception{
 		Connection cn = null;
 		PersonaEL persona = null;
+		UsuarioEL usuario = null;
 		try{
 			cn = Conexion.instancia().Conectar();
 			CallableStatement cst = cn.prepareCall("{call sp_VerificarUsuario(?,?)}");
@@ -98,6 +99,11 @@ public class UsuarioDL {
 				persona.setApellidopaterno(rs.getString("apellidoPaterno"));
 				persona.setApellidomaterno(rs.getString("apellidoMaterno"));
 				persona.setNombre(rs.getString("nombre"));
+				
+				usuario = new UsuarioEL();
+				usuario.setTipoUsuario(rs.getString("tipoUsuario"));
+				persona.setUsuario(usuario);
+				
 			}
 			
 			if (persona == null)
